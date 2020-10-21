@@ -118,7 +118,7 @@ public class Player : Entity
 
     void UseWeapon()
     {
-        if (Input.GetButtonDown("Attack") && !isUsingWeapon) {
+        if (Input.GetButton("Attack") && !isUsingWeapon) {
             weapon.Use();
         }
     }
@@ -155,11 +155,6 @@ public class Player : Entity
         }
     }
 
-    public void Sword()
-    {
-        anim.SetTrigger("swing_sword");
-    }
-
     /* 
     resets dash changes
      */
@@ -168,5 +163,22 @@ public class Player : Entity
         isDashing = false;
         rb2d.gravityScale = 1;
         dashDelta = 0;
+    }
+
+    public void Sword()
+    {
+        anim.SetTrigger("swing_sword");
+    }
+
+    public void Spear()            
+    {
+        Vector2 positionDifference;
+        float angle;
+        Vector2 mposition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        positionDifference = (mposition - (Vector2)transform.position).normalized;
+        angle = Mathf.Atan2(positionDifference.y, positionDifference.x);
+        angle = angle * Mathf.Rad2Deg + (transform.localScale.x == 1 ? 0 : 180);
+        weaponHolder.parent.rotation = Quaternion.Euler(0, 0, angle);
+        anim.SetTrigger("stab_spear");
     }
 }

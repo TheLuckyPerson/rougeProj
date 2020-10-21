@@ -6,6 +6,11 @@ public class Spear : Weapons
 {
     public override void Use()
     {
-        base.Use();
+        player.Spear();
+    }
+
+    public override void Utility()
+    {
+        player.Dash();
     }
 }
