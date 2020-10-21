@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// EventSystem.current.IsPointerOverGameObject() to fix craft and swing
 public class Player : Entity
 {
     [Header("Player Stats")]
