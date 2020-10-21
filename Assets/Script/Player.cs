@@ -22,12 +22,12 @@ public class Player : Entity
 
     [Space]
     [Header("Weapon")]
-    public Weapons weapon;
-    public SpriteRenderer weaponSprite;
+    public GameObject weaponObject;
+    public Transform weaponHolder;
+    private Weapons weapon;
 
     private Rigidbody2D rb2d;
     private Animator anim;
-    private SpriteRenderer spr;
     private Transform weaponTransform;
 
     Vector3 dir;
@@ -43,10 +43,10 @@ public class Player : Entity
     {
         rb2d = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        spr = GetComponent<SpriteRenderer>();
+        GameObject g = Instantiate(weaponObject, weaponHolder.transform.position, Quaternion.identity, weaponHolder);
+        weapon = g.GetComponent<Weapons>();
         weapon.player = this;
-        weaponSprite.sprite = weapon.weaponSprite;
-        weaponTransform = weaponSprite.transform;
+        weaponTransform = g.transform;
     }
 
     // Update is called once per frame
@@ -67,7 +67,7 @@ public class Player : Entity
     {
         isGrounded = CollisionDetect(Vector3.down, .02f, groundLayer) != -1;
         dir = Vector3.right * Input.GetAxis("Horizontal");
-        isUsingWeapon =  weaponTransform.gameObject.activeSelf;
+        isUsingWeapon =  weaponHolder.gameObject.activeSelf;
         if(isGrounded) {
             usedUngroundedDash = false;
         }

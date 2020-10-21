@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Weapon", menuName = "ScriptableObjects/Base", order = 1)]
-public class Weapons : ScriptableObject
+public class Weapons : MonoBehaviour
 {
     public Player player;
     
-    public Sprite weaponSprite;
     // Start is called before the first frame update
     public Weapons()
     {
