@@ -18,6 +18,7 @@ public class Player : Entity
     public LayerMask groundLayer;
     public bool isGrounded = true;
     private bool isDashing = false;
+    private bool usedUngroundedDash = false;
 
     [Space]
     [Header("Weapon")]
@@ -67,6 +68,9 @@ public class Player : Entity
         isGrounded = CollisionDetect(Vector3.down, .02f, groundLayer) != -1;
         dir = Vector3.right * Input.GetAxis("Horizontal");
         isUsingWeapon =  weaponTransform.gameObject.activeSelf;
+        if(isGrounded) {
+            usedUngroundedDash = false;
+        }
         if (dir != Vector3.zero) {
             facing = dir;
             if(!isUsingWeapon)
@@ -122,6 +126,11 @@ public class Player : Entity
     public void Dash()
     {
         if(!isDashing) {
+            if(!isGrounded && usedUngroundedDash) {
+                return;
+            } else if(!isGrounded) {
+                usedUngroundedDash = true;
+            }
             rb2d.velocity = Vector3.zero;
             rb2d.gravityScale = 0;
             startDashX = transform.position.x;
