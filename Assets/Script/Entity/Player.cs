@@ -7,6 +7,7 @@ public class Player : Entity
     [Header("Player Stats")]
     public float health = 3;
 
+    [Space]
     [Header("Movement Variables")]
     public float speed = 7f;
     public float dashSpeed = 24f;
@@ -38,6 +39,8 @@ public class Player : Entity
     float startDashX;
     float dashDelta;
 
+    string weaponStr;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,6 +57,7 @@ public class Player : Entity
     {
         VaribleUpdates();
         Jump();
+        VerticalMovementCorrection();
         UseWeapon();
         UseUtility();
     }
@@ -70,6 +74,7 @@ public class Player : Entity
         isUsingWeapon =  weaponHolder.gameObject.activeSelf;
         if(isGrounded) {
             usedUngroundedDash = false;
+            if(rb2d.velocity.y < 0) rb2d.velocity = Vector3.zero; // attempt to get rid of going through floor
         }
         if (dir != Vector3.zero) {
             facing = dir;
@@ -78,11 +83,22 @@ public class Player : Entity
         }
     }
 
+    void VerticalMovementCorrection()
+    {
+        if(rb2d.velocity.y!= 0) {
+            float currentVertVel = rb2d.velocity.y*Time.deltaTime;
+            Vector3 v = rb2d.velocity.normalized;
+            if(WallCorrection(v, groundLayer, ref currentVertVel)) { // next vert movement will go past a ground object
+                transform.position += v * currentVertVel;
+                rb2d.velocity = Vector3.zero;
+            }
+        }
+    }
     void Movement()
     {
         if (!isDashing) { // is able to control movement
             movement = Time.fixedDeltaTime * speed;
-            WallCorrection(dir, groundLayer);
+            WallCorrection(dir, groundLayer, ref movement);
             transform.position += movement * dir;
             lastValidFacing = facing;
         } else { // dash movement
@@ -94,7 +110,7 @@ public class Player : Entity
             } else {
                 dashDelta += trueMovement; // true distance moved since dashing
             }
-            WallCorrection(lastValidFacing, groundLayer);
+            WallCorrection(lastValidFacing, groundLayer, ref movement);
             transform.position += movement * lastValidFacing;
         }
     }
@@ -115,7 +131,7 @@ public class Player : Entity
 
     void Jump()
     {
-        if (Input.GetButtonDown("Jump") && isGrounded) {
+        if (Input.GetButton("Jump") && isGrounded) {
             rb2d.velocity = Vector2.up * jumpPw;
             if(isDashing) {
                 StopDash();

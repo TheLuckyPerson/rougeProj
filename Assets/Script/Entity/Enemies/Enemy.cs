@@ -36,7 +36,7 @@ public class Enemy : Entity
     public virtual void MoveCycle()
     {
         movement = Time.fixedDeltaTime * moveSpeed;
-        WallCorrection(playerDir, wallLayer);
+        WallCorrection(playerDir, wallLayer, ref movement);
         transform.position += movement * playerDir;
     }
 

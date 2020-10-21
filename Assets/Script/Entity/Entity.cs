@@ -26,15 +26,18 @@ public class Entity : MonoBehaviour
 
     /* 
     Corrects for movemnt against a wall in @pram dir_
+    @return true if corrected
      */
-    public void WallCorrection(Vector3 dir_, LayerMask layer)
+    public bool WallCorrection(Vector3 dir_, LayerMask layer, ref float move)
     {
         float colPredict = CollisionDetect(dir_, movement, layer);
         if (colPredict != -1) { // next move goes past a wall
             if(colPredict > COLLISION_CONTACT_OFFSET) // keep in mind unity collision offset
-                movement = colPredict - COLLISION_CONTACT_OFFSET;
+                move = colPredict - COLLISION_CONTACT_OFFSET;
             else
-                movement = 0;
+                move = 0;
+            return true;
         }
+        return false;
     }
 }
