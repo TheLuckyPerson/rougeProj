@@ -11,6 +11,6 @@ public class Sword : Weapons
 
     public override void Utility()
     {
-        player.Dash();
+        player.Dash(this);
     }
 }

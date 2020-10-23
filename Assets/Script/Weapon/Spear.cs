@@ -11,6 +11,6 @@ public class Spear : Weapons
 
     public override void Utility()
     {
-        player.Dash();
+        player.DoubleJump(this);
     }
 }
